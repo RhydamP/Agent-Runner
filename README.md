@@ -125,6 +125,6 @@ npm test  # Run backend tests
 - **Zod schemas** for runtime validation
 - **Docker Compose** for easy development setup
 - **Postgres + Redis** for persistence and caching
-- **shadcn/ui** for consistent, accessible components
+- **lucide-react** for consistent, accessible components
 
 Built in 2-3 days as a technical demonstration of full-stack development skills.
