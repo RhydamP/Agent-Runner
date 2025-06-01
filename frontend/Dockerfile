@@ -1,6 +1,10 @@
 # Base image for building the frontend
 FROM node:20-slim AS builder
 
+
+ARG BACKEND_URL
+ENV BACKEND_URL=$BACKEND_URL
+
 WORKDIR /app
 
 # Install dependencies
@@ -9,6 +13,8 @@ RUN npm ci
 
 # Copy source files
 COPY . .
+
+RUN echo "BACKEND_URL=$BACKEND_URL" >> .env.local
 
 # Build the frontend app
 RUN npm run build
