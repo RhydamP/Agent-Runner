@@ -1,39 +1,54 @@
-// import OpenAI from 'openai';
+import OpenAI from 'openai';
+import { prisma } from '../utils/prisma';
+import redis from '../utils/redis';
 
 // const openai = new OpenAI({
 //   apiKey: process.env.OPENAI_API_KEY!,
 // });
 
-// export async function getLLMResponse(tool: string, input: any): Promise<string> {
-//   if (tool === 'calculator') {
-//     return `The answer to your calculation is ${input}.`;
+// const GPT_Model = process.env.GPT_MODEL!;
+
+// export async function getLLMResponse(tool: string, input: string): Promise<string> {
+
+//   let systemPrompt: string;
+//   let userPrompt: string;
+
+//   if (tool === 'web-search') {
+//     systemPrompt = 'You are a helpful assistant that summarizes web results.';
+//     userPrompt = `Based on this search result,start with 'Based on my observation', summarize it in one paragraph upto 50-100 words like you're helping a friend: ${input}`;
+//   } else if (tool === 'calculator') {
+//     systemPrompt = 'You are a helpful assistant that explains simple calculations briefly.';
+//     userPrompt = `Answer only with the result of this calculation with a starting 'The answer to your calculation is': ${input}`;
+//   } else {
+//     throw new Error('Unsupported tool');
 //   }
 
-//   // Handle SearchResult[]
-//   if (Array.isArray(input)) {
-//     const formatted = input.slice(0, 3).map((res, i) =>
-//       `${i + 1}. ${res.title} (${res.link}) — ${res.snippet}`
-//     ).join('\n');
 
-//     const prompt = `Based on my search, here are some results:\n\n${formatted}`;
+//   try {
+//     const chat = await openai.chat.completions.create({
+//       model: GPT_Model,
+//       messages: [
+//         { role: 'system', content: systemPrompt },
+//         { role: 'user', content: userPrompt },
+//       ],
+//     });
 
-//     try {
-//       const chat = await openai.chat.completions.create({
-//         model: 'gpt-3.5-turbo',
-//         messages: [
-//           { role: 'system', content: 'You are a helpful assistant.' },
-//           { role: 'user', content: prompt },
-//         ],
-//       });
+//     const response = chat.choices[0]?.message.content || 'No response from LLM.';
+//     const tokenUsage = chat.usage?.total_tokens ?? null;
 
-//       return chat.choices[0]?.message.content || 'No response from LLM.';
-//     } catch (e) {
-//       console.error('LLM Error:', e);
-//       return prompt; // fallback to plain response
-//     }
+//     await prisma.run.create({
+//       data: {
+//         prompt: input,
+//         tool,
+//         response,
+//         tokenUsage,
+//       },
+//     });
+//     return response;
+//   } catch (e) {
+//     console.error('LLM Error:', e);
+//     return userPrompt;
 //   }
-
-//   return 'Unsupported input for LLM.';
 // }
 
 export async function getLLMResponse(tool: string, input: string): Promise<string> {
@@ -46,17 +61,32 @@ export async function getLLMResponse(tool: string, input: string): Promise<strin
   ];
 
   const searchResponses = [
-    `Based on my search, here's the best result I found: ${input}`,
-    `I looked it up and found this: ${input}`,
-    `Here’s what came up when I searched: ${input}`,
-    `Top search result: ${input}`,
-    `Found this through search: ${input}`
+    `Based on my observation: ${input}`
   ];
 
   const responses = tool === 'calculator' ? calculatorResponses : searchResponses;
 
-  await new Promise((res) => setTimeout(res, 300)); // Simulate delay
+  await new Promise((res) => setTimeout(res, 300));
 
   const randomIndex = Math.floor(Math.random() * responses.length);
-  return responses[randomIndex];
+  const response = responses[randomIndex];
+  await prisma.run.create({
+    data: {
+      prompt: input,
+      tool,
+      response,
+      tokenUsage: null,
+    },
+  });
+
+  const redisEntry = {
+    timestamp: new Date().toISOString(),
+    tool,
+    prompt: input,
+    response,
+  };
+
+  await redis.lpush('recent_runs', JSON.stringify(redisEntry));
+  await redis.ltrim('recent_runs', 0, 9);
+  return response;
 }

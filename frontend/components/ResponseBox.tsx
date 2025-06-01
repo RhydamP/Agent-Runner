@@ -3,10 +3,6 @@
 
 import { useState, useEffect } from 'react';
 
-interface Props {
-  response: string;
-  loading: boolean;
-}
 
 export default function ResponseBox({ response, loading }: Props) {
   const [displayedText, setDisplayedText] = useState('');

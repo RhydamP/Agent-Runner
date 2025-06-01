@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import PromptForm from '@/components/PromptForm';
 import ResponseBox from '@/components/ResponseBox';
+import SearchHistory from '@/components/SearchHistory';
 import { runPrompt } from '@/lib/apiClient';
 
 export default function HomePage() {
@@ -18,6 +19,7 @@ export default function HomePage() {
       setResponse(data.result);
     } catch (error) {
       setResponse('Something went wrong.');
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -73,8 +75,9 @@ export default function HomePage() {
         </div>
 
         {/* Response Section - Full Width Below */}
-        <div className="w-full">
+        <div className="w-full space-y-6">
           <ResponseBox response={response} loading={loading} />
+          <SearchHistory />
         </div>
       </main>
     </div>

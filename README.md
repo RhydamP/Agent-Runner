@@ -322,6 +322,10 @@ Built with ❤️ by [Your Name]
 
 ---
 
+```bash
+docker compose up --build
+
+
 <div align="center">
   <h3>⭐ If you found this project helpful, please give it a star!</h3>
   <p>Made with 💻 and ☕ in 2025</p>

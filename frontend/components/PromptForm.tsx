@@ -3,13 +3,8 @@
 
 import { useState } from 'react';
 
-type Tool = 'calculator' | 'web-search';
 
-interface Props {
-  onSubmit: (prompt: string, tool: Tool) => void;
-}
-
-export default function PromptForm({ onSubmit }: Props) {
+export default function PromptForm({ onSubmit }: FormProps) {
   const [prompt, setPrompt] = useState('');
   const [tool, setTool] = useState<Tool>('calculator');
   const [isFocused, setIsFocused] = useState(false);

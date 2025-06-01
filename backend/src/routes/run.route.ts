@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { getLLMResponse } from '../services/llm.service';
 import { evaluateExpression } from '../services/calculator.service';
 import { runWebSearch } from '../services/search.service';
+import redis from '../utils/redis';
 
 const router = Router();
 
@@ -43,6 +44,18 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: 'Internal error', details: err });
     }
 });
+
+router.get('/history', async (_req: Request, res: Response) => {
+  try {
+    const items = await redis.lrange('recent_runs', 0, 9); 
+    const parsed = items.map((item) => JSON.parse(item));
+    res.json(parsed);
+  } catch (err) {
+    console.error('❌ Redis fetch error:', err);
+    res.status(500).json({ error: 'Failed to fetch Redis history' });
+  }
+});
+
 
 
 export default router;

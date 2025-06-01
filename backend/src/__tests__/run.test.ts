@@ -24,8 +24,8 @@ describe('POST /run', () => {
     });
     console.log('👀 Response:', response.body); 
     expect(response.status).toBe(200);
-    expect(response.body.result).toMatch(/search|found|result|looked/i);
-});
+    expect(response.body.result).toMatch(/Based on my observation/i);
+}, 15000);
 
   it('should reject invalid prompt (too long)', async () => {
     const longPrompt = 'a'.repeat(600);
