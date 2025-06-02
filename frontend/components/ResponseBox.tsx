@@ -100,7 +100,7 @@ export default function ResponseBox({ response, loading }: Props) {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <p className="text-gray-800 dark:text-white leading-relaxed overflow-wrap-anywhere whitespace-pre-wrap">
+                  <p className="mobile-text-sm text-gray-800 dark:text-white leading-relaxed overflow-wrap-anywhere whitespace-pre-wrap">
                     {displayedText}
                     {isTyping && (
                       <span className="inline-block w-2 h-5 bg-blue-600 ml-1 animate-pulse"></span>

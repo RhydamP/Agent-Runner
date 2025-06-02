@@ -4,7 +4,7 @@ dotenv.config();
 import request from 'supertest';
 import app from '../app';
 
-jest.mock('../services/llm.service');
+jest.mock('../services/__mocks__/llm.service');
 
 describe('POST /run', () => {
   it('should return a friendly LLM message for a calculator input', async () => {

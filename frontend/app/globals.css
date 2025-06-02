@@ -389,6 +389,8 @@ body {
   .mobile-padding {
     padding-left: 1rem;
     padding-right: 1rem;
+    overflow: wrap;
+    
   }
   
   .mobile-text-sm {
@@ -396,7 +398,6 @@ body {
   }
 }
 
-/* Performance optimizations */
 .gpu-accelerated {
   transform: translateZ(0);
   backface-visibility: hidden;

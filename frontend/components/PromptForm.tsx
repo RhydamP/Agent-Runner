@@ -111,7 +111,7 @@ export default function PromptForm({ onSubmit }: FormProps) {
                     </svg>
                   </div>
                   <div>
-                    <div className="font-medium text-gray-800 dark:text-white">Calculator</div>
+                    <div className="text-sm sm:text-xs font-medium text-gray-800 dark:text-white">Calculator</div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">Math operations</div>
                   </div>
                 </div>

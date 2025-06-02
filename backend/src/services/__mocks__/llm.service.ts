@@ -16,27 +16,25 @@ export async function getLLMResponse(tool: string, input: string): Promise<strin
 
   const responses = tool === 'calculator' ? calculatorResponses : searchResponses;
 
-  await new Promise((res) => setTimeout(res, 300));
+  await new Promise((res) => setTimeout(res, 300)); // Simulate latency
+  const response = responses[Math.floor(Math.random() * responses.length)];
 
-  const randomIndex = Math.floor(Math.random() * responses.length);
-  const response = responses[randomIndex];
   await prisma.run.create({
     data: {
       prompt: input,
       tool,
       response,
-      tokenUsage: null, 
+      tokenUsage: null,
     },
   });
 
-   const redisEntry = {
+  await redis.lpush('recent_runs', JSON.stringify({
     timestamp: new Date().toISOString(),
     tool,
     prompt: input,
     response,
-  };
+  }));
 
-  await redis.lpush('recent_runs', JSON.stringify(redisEntry));
   await redis.ltrim('recent_runs', 0, 9);
   return response;
 }

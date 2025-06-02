@@ -14,7 +14,7 @@ A minimal AI agent runner with tool integration - built as a full-stack engineer
 
 ## Tech Stack
 
-**Frontend:** Next.js 14, React, Tailwind CSS, shadcn/ui  
+**Frontend:** Next.js 14, React, Tailwind CSS  
 **Backend:** Node.js, Express, TypeScript, Zod validation  
 **Database:** PostgreSQL, Redis  
 **AI:** OpenAI GPT, SerpAPI for search  
