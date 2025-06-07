@@ -16,7 +16,6 @@ COPY tsconfig.json ./
 COPY prisma ./prisma
 COPY src ./src
 
-COPY .env . 
 # Generate Prisma client
 RUN npx prisma generate
 
